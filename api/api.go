@@ -99,6 +99,9 @@ func (a *API) createRouter(cfg *config.Config) *fiber.App {
 	})
 	// Custom CSS
 	app.Get("/css/custom.css", CustomCSSHandler{customCSS: cfg.UI.CustomCSS}.GetCustomCSS)
+	// RSS/Atom feeds
+	app.Get("/history.rss", HistoryFeedHandler{cfg: cfg}.GetRSS)
+	app.Get("/history.atom", HistoryFeedHandler{cfg: cfg}.GetAtom)
 	// Everything else falls back on static content
 	app.Use(redirect.New(redirect.Config{
 		Rules: map[string]string{
