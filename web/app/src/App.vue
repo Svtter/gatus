@@ -36,7 +36,7 @@
                 <div>
                   <h1 class="text-2xl font-bold tracking-tight">{{ header }}</h1>
                   <p v-if="buttons && buttons.length" class="text-sm text-muted-foreground">
-                    System Monitoring Dashboard
+                    {{ $t('app.login.subtitle') }}
                   </p>
                 </div>
               </component>
@@ -44,6 +44,7 @@
 
             <!-- Right Side Actions -->
             <div class="flex items-center gap-2">
+              <LanguageSwitcher />
               <!-- Navigation Links (Desktop) -->
               <nav v-if="buttons && buttons.length" class="hidden md:flex items-center gap-1">
                 <a 
@@ -126,7 +127,7 @@
             <div class="p-3 rounded-md bg-destructive/10 border border-destructive/20">
               <p class="text-sm text-destructive text-center">
                 <span v-if="route.query.error === 'access_denied'">
-                  You do not have access to this status page
+                  {{ $t('app.login.noAccess') }}
                 </span>
                 <span v-else>{{ route.query.error }}</span>
               </p>
@@ -141,7 +142,7 @@
             <Loading v-if="isOidcLoading" size="xs" />
             <template v-else>
               <LogIn class="mr-2 h-4 w-4" />
-              Login with OIDC
+              {{ $t('app.login.oidc') }}
             </template>
           </a>
         </CardContent>
@@ -156,14 +157,17 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRoute } from 'vue-router'
+import { useI18n } from 'vue-i18n'
 import { Menu, X, LogIn } from 'lucide-vue-next'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import Social from './components/Social.vue'
 import Tooltip from './components/Tooltip.vue'
 import Loading from './components/Loading.vue'
+import LanguageSwitcher from './components/LanguageSwitcher.vue'
 
 const route = useRoute()
+const { t } = useI18n()
 
 // State
 const retrievedConfig = ref(false)
@@ -193,7 +197,7 @@ const buttons = computed(() => {
 })
 
 const loginSubtitle = computed(() => {
-  return window.config && window.config.loginSubtitle && window.config.loginSubtitle !== '{{ .UI.LoginSubtitle }}' ? window.config.loginSubtitle : "System Monitoring Dashboard"
+  return window.config && window.config.loginSubtitle && window.config.loginSubtitle !== '{{ .UI.LoginSubtitle }}' ? window.config.loginSubtitle : t('app.login.subtitle')
 })
 
 // Methods

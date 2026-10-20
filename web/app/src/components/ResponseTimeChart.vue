@@ -12,6 +12,7 @@
 
 <script setup>
 import { ref, computed, watch, onMounted, onUnmounted } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Line } from 'vue-chartjs'
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, TimeScale } from 'chart.js'
 import annotationPlugin from 'chartjs-plugin-annotation'
@@ -20,6 +21,8 @@ import { generatePrettyTimeDifference } from '@/utils/time'
 import Loading from './Loading.vue'
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler, TimeScale, annotationPlugin)
+
+const { t } = useI18n()
 
 const props = defineProps({
   endpointKey: {
@@ -118,7 +121,7 @@ const chartData = computed(() => {
   return {
     labels,
     datasets: [{
-      label: 'Response Time (ms)',
+      label: t('chart.datasetLabel'),
       data: values.value,
       borderColor: isDark.value ? 'rgb(96, 165, 250)' : 'rgb(59, 130, 246)',
       backgroundColor: isDark.value ? 'rgba(96, 165, 250, 0.1)' : 'rgba(59, 130, 246, 0.1)',
@@ -207,7 +210,7 @@ const chartOptions = computed(() => {
             },
             label: {
               display: () => hoveredEventIndex.value === index,
-              content: [event.isOngoing ? `Status: ONGOING` : `Status: RESOLVED`, `Unhealthy for ${event.duration}`, `Started at ${new Date(event.timestamp).toLocaleString()}`],
+              content: [event.isOngoing ? t('chart.statusOngoing') : t('chart.statusResolved'), t('chart.unhealthyFor', { duration: event.duration }), t('chart.startedAt', { time: new Date(event.timestamp).toLocaleString() })],
               backgroundColor: getEventColor(),
               color: '#ffffff',
               font: {
@@ -268,11 +271,11 @@ const fetchData = async () => {
       timestamps.value = data.timestamps || []
       values.value = data.values || []
     } else {
-      error.value = 'Failed to load chart data'
+      error.value = t('chart.loadError')
       console.error('[ResponseTimeChart] Error:', await response.text())
     }
   } catch (err) {
-    error.value = 'Failed to load chart data'
+    error.value = t('chart.loadError')
     console.error('[ResponseTimeChart] Error:', err)
   } finally {
     loading.value = false

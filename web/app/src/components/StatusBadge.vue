@@ -7,7 +7,10 @@
 
 <script setup>
 import { computed } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { Badge } from '@/components/ui/badge'
+
+const { t } = useI18n()
 
 const props = defineProps({
   status: {
@@ -33,13 +36,13 @@ const variant = computed(() => {
 const label = computed(() => {
   switch (props.status) {
     case 'healthy':
-      return 'Healthy'
+      return t('statusBadge.healthy')
     case 'unhealthy':
-      return 'Unhealthy'
+      return t('statusBadge.unhealthy')
     case 'degraded':
-      return 'Degraded'
+      return t('statusBadge.degraded')
     default:
-      return 'Unknown'
+      return t('statusBadge.unknown')
   }
 })
 

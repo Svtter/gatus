@@ -1,27 +1,30 @@
+import i18n from '@/i18n'
+
 /**
  * Generates a human-readable relative time string (e.g., "2 hours ago")
  * @param {string|Date} timestamp - The timestamp to convert
  * @returns {string} Relative time string
  */
 export const generatePrettyTimeAgo = (timestamp) => {
+  const t = i18n.global.t
   let differenceInMs = new Date().getTime() - new Date(timestamp).getTime();
   if (differenceInMs < 500) {
-    return "now";
+    return t('time.now');
   }
   if (differenceInMs > 3 * 86400000) { // If it was more than 3 days ago, we'll display the number of days ago
-    let days = (differenceInMs / 86400000).toFixed(0);
-    return days + " day" + (days !== "1" ? "s" : "") + " ago";
+    let days = Math.round(differenceInMs / 86400000);
+    return t('time.day', days);
   }
   if (differenceInMs > 3600000) { // If it was more than 1h ago, display the number of hours ago
-    let hours = (differenceInMs / 3600000).toFixed(0);
-    return hours + " hour" + (hours !== "1" ? "s" : "") + " ago";
+    let hours = Math.round(differenceInMs / 3600000);
+    return t('time.hour', hours);
   }
   if (differenceInMs > 60000) {
-    let minutes = (differenceInMs / 60000).toFixed(0);
-    return minutes + " minute" + (minutes !== "1" ? "s" : "") + " ago";
+    let minutes = Math.round(differenceInMs / 60000);
+    return t('time.minute', minutes);
   }
-  let seconds = (differenceInMs / 1000).toFixed(0);
-  return seconds + " second" + (seconds !== "1" ? "s" : "") + " ago";
+  let seconds = Math.round(differenceInMs / 1000);
+  return t('time.second', seconds);
 }
 
 /**
@@ -31,6 +34,7 @@ export const generatePrettyTimeAgo = (timestamp) => {
  * @returns {string} Time difference string
  */
 export const generatePrettyTimeDifference = (start, end) => {
+  const t = i18n.global.t
   const ms = new Date(start) - new Date(end)
   const seconds = Math.floor(ms / 1000)
   const minutes = Math.floor(seconds / 60)
@@ -38,20 +42,20 @@ export const generatePrettyTimeDifference = (start, end) => {
 
   if (hours > 0) {
     const remainingMinutes = minutes % 60
-    const hoursText = hours + (hours === 1 ? ' hour' : ' hours')
+    const hoursText = t('time.durationHour', hours)
     if (remainingMinutes > 0) {
-      return hoursText + ' ' + remainingMinutes + (remainingMinutes === 1 ? ' minute' : ' minutes')
+      return hoursText + ' ' + t('time.durationMinute', remainingMinutes)
     }
     return hoursText
   } else if (minutes > 0) {
     const remainingSeconds = seconds % 60
-    const minutesText = minutes + (minutes === 1 ? ' minute' : ' minutes')
+    const minutesText = t('time.durationMinute', minutes)
     if (remainingSeconds > 0) {
-      return minutesText + ' ' + remainingSeconds + (remainingSeconds === 1 ? ' second' : ' seconds')
+      return minutesText + ' ' + t('time.durationSecond', remainingSeconds)
     }
     return minutesText
   } else {
-    return seconds + (seconds === 1 ? ' second' : ' seconds')
+    return t('time.durationSecond', seconds)
   }
 }
 
