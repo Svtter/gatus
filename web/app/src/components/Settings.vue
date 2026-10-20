@@ -4,7 +4,7 @@
       <!-- Refresh Rate -->
       <button 
         @click="showRefreshMenu = !showRefreshMenu"
-        :aria-label="`Refresh interval: ${formatRefreshInterval(refreshIntervalValue)}`"
+        :aria-label="$t('settings.refreshInterval', { interval: formatRefreshInterval(refreshIntervalValue) })"
         :aria-expanded="showRefreshMenu"
         class="flex items-center gap-1.5 px-3 py-1.5 rounded-full hover:bg-accent transition-colors relative"
       >
@@ -37,7 +37,7 @@
       <!-- Theme Toggle -->
       <button
         @click="toggleDarkMode"
-        :aria-label="darkMode ? 'Switch to light mode' : 'Switch to dark mode'"
+        :aria-label="darkMode ? $t('settings.switchToLightMode') : $t('settings.switchToDarkMode')"
         class="p-1.5 rounded-full hover:bg-accent transition-colors group relative"
       >
         <Sun v-if="darkMode" class="h-3.5 w-3.5 transition-all" />
@@ -45,7 +45,7 @@
         
         <!-- Tooltip -->
         <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-2 py-1 bg-popover text-popover-foreground text-xs rounded-md shadow-md opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap">
-          {{ darkMode ? 'Light mode' : 'Dark mode' }}
+          {{ darkMode ? $t('settings.lightMode') : $t('settings.darkMode') }}
         </div>
       </button>
     </div>

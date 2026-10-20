@@ -17,7 +17,7 @@
         <div class="flex items-center justify-between">
           <div class="flex items-center gap-2">
             <component :is="mostRecentIcon" :class="['w-5 h-5', mostRecentIconClass]" />
-            <h2 class="text-base font-semibold text-gray-900 dark:text-gray-100">Announcements</h2>
+            <h2 class="text-base font-semibold text-gray-900 dark:text-gray-100">{{ $t('announcements.title') }}</h2>
             <span class="text-xs text-gray-500 dark:text-gray-400">
               ({{ announcements.length }})
             </span>
@@ -130,8 +130,11 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { useI18n } from 'vue-i18n'
 import { XCircle, AlertTriangle, Info, CheckCircle, Circle, ChevronDown } from 'lucide-vue-next'
 import { formatAnnouncementMessage } from '@/utils/markdown'
+
+const { t, locale } = useI18n()
 
 // Props
 const props = defineProps({
@@ -243,11 +246,11 @@ const formatDate = (dateString) => {
   yesterday.setDate(yesterday.getDate() - 1)
 
   if (date.toDateString() === today.toDateString()) {
-    return 'Today'
+    return t('announcements.today')
   } else if (date.toDateString() === yesterday.toDateString()) {
-    return 'Yesterday'
+    return t('announcements.yesterday')
   } else {
-    return date.toLocaleDateString('en-US', {
+    return date.toLocaleDateString(locale.value, {
       weekday: 'long',
       year: 'numeric',
       month: 'long',
@@ -257,7 +260,7 @@ const formatDate = (dateString) => {
 }
 
 const formatTime = (timestamp) => {
-  return new Date(timestamp).toLocaleTimeString('en-US', {
+  return new Date(timestamp).toLocaleTimeString(locale.value, {
     hour: '2-digit',
     minute: '2-digit',
     hour12: false
@@ -265,7 +268,7 @@ const formatTime = (timestamp) => {
 }
 
 const formatFullTimestamp = (timestamp) => {
-  return new Date(timestamp).toLocaleString('en-US', {
+  return new Date(timestamp).toLocaleString(locale.value, {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
